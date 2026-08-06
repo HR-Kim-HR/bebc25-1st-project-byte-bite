@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>마이페이지</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" th:href="@{/css/mypage.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+
+<div th:replace="~{layout/common :: nav-header}"></div>
+<main class="wrapper">
+
+    <!-- 내 정보 카드 -->
+    <section class="profile-card">
+        <div class="profile-info">
+            <h2>
+                <!-- 닉네임 th 필드 설정 -->
+                <span th:text="${memberInfo?.nickname}"></span>
+                <button type="button" class="btn-sm" onclick="openModal()">닉네임 변경</button>
+            </h2>
+            <div class="email" th:text="${memberInfo?.email}"></div>
+        </div>
+
+        <div class="profile-stats">
+            <!-- 일반 사용자: 작성한 리뷰 -->
+            <div class="stat-item" th:if="${restaurant == null}">
+                <span class="stat-label">작성한 리뷰</span>
+                <span class="stat-value" th:text="${mypagePostList != null ? mypagePostList.size() : 0}">0</span>
+            </div>
+            <!-- 맛집 운영자: 작성한 소식 -->
+            <div class="stat-item" th:if="${restaurant != null}">
+                <span class="stat-label">작성한 소식</span>
+                <span class="stat-value" th:text="${mypageNewsList != null ? mypageNewsList.size() : 0}">0</span>
+            </div>
+
+            <!-- 가입일 th 필드 설정 -->
+            <div class="stat-item">
+                <span class="stat-label">가입일</span>
+                <span class="stat-value"
+                      th:text="${memberInfo != null ? #temporals.format(memberInfo.createdAt, 'yyyy-MM-dd') : ''}">2026-07-28</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 맛집 운영자 식당 정보 카드 -->
+    <th:block th:if="${restaurant != null}">
+        <section class="profile-restaurant-card">
+            <div class="profile-restaurant-img">
+                <img th:src="@{/uploads/restaurant/{image}(image=${restaurant?.imageUrl})}" alt="식당 이미지">
+            </div>
+            <div class="profile-restaurant-info">
+                <h2>
+                    <span th:text="${restaurant.rname}">맛있는 한끼</span>
+                </h2>
+                <div class="restaurant-meta-item">
+                    <span class="badge-category" th:text="${restaurant.categoryName}">한식</span>
+                </div>
+                <div class="address">📍 <span th:text="${restaurant.address}">서울 강남구 테헤란로 123</span></div>
+                <div class="phone">☎ <span th:text="${restaurant.phone}">0212345678</span></div>
+            </div>
+            <div class="profile-restaurant-action">
+                <a th:href="@{/mypage/restaurant/edit}" class="btn-restaurant-edit">식당 정보 수정</a>
+            </div>
+        </section>
+    </th:block>
+
+    <!-- 1. 일반 사용자인 경우: 리뷰 목록만 표시 -->
+    <th:block th:if="${restaurant == null}">
+        <!-- 작성한 리뷰 -->
+        <section class="posts-section">
+            <div class="section-header">
+                <div class="section-title">
+                    작성한 리뷰
+                    <span class="count-badge" th:text="${mypagePostList != null ? mypagePostList.size() : 0}">0</span>
+                </div>
+            </div>
+
+            <div class="posts-list">
+                <div class="post-item" th:each="post : ${mypagePostList}">
+                    <img class="post-img" th:src="@{/uploads/posts/{image}(image=${#strings.arraySplit(post.imageUrl, ',')[0]})}" alt="리뷰 이미지">
+                    <div class="post-main-content">
+                        <a th:href="@{/posts/{postId}(postId=${post.id})}" class="post-title-link">
+                            <h3 class="post-title" th:text="${post.title}">리뷰 제목이 들어가는 위치입니다.</h3>
+                        </a>
+                        <span class="restaurant-tag" th:text="${post.restaurantName}">식당 이름</span>
+                    </div>
+                    <div class="post-meta">
+                        <span class="post-date"
+                              th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2026-07-29</span>
+                        <div class="post-actions">
+                            <a th:href="@{/posts/{postId}/edit(postId=${post.id})}" class="btn-action">수정</a>
+                            <form th:action="@{/posts/{postId}/delete(postId=${post.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-action" onclick="return confirm('선택된 글을 삭제하시겠습니까?')">삭제</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-box" th:if="${mypagePostList == null or #lists.isEmpty(mypagePostList)}">
+                    작성한 리뷰가 없습니다.
+                </div>
+            </div>
+
+            <div class="pagination" th:if="${mypagePostList != null and not #lists.isEmpty(mypagePostList)}">
+                <button>&lt;</button>
+                <span>1</span>
+                <button>&gt;</button>
+            </div>
+        </section>
+    </th:block>
+
+    <!-- 2. 식당 운영자(MANAGER)인 경우: 소식 목록만 표시 -->
+    <th:block th:if="${restaurant != null}">
+        <!-- 작성한 소식 -->
+        <section class="posts-section">
+            <div class="section-header">
+                <div class="section-title">
+                    작성한 소식
+                    <span class="count-badge" th:text="${mypageNewsList != null ? mypageNewsList.size() : 0}">0</span>
+                </div>
+            </div>
+
+            <div class="posts-list">
+                <div class="post-item" th:each="news : ${mypageNewsList}">
+                    <img class="post-img" th:src="@{/uploads/news/{image}(image=${news.imageUrl})}" alt="소식 이미지">
+                    </img>
+                    <div class="post-main-content">
+                        <a th:href="@{/news/{newsId}(newsId=${news.id})}" class="post-title-link">
+                            <h3 class="post-title" th:text="${news.title}">소식 제목이 들어가는 위치입니다.</h3>
+                        </a>
+                        <span class="restaurant-tag" th:text="${news.restaurantName}">식당 이름</span>
+                    </div>
+                    <div class="post-meta">
+                        <span class="post-date"
+                              th:text="${#temporals.format(news.createdAt, 'yyyy-MM-dd')}">2026-07-29</span>
+                        <div class="post-actions">
+                            <a th:href="@{/news/{id}/edit(id=${news.id})}" class="btn-action">수정</a>
+                            <form th:action="@{/news/{id}/delete(id=${news.id})}" method="post" style="display:inline;">
+                                <button type="submit" class="btn-action" onclick="return confirm('정말 삭제하시겠습니까?');">삭제</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="empty-box" th:if="${mypageNewsList == null or #lists.isEmpty(mypageNewsList)}">
+                    작성한 소식이 없습니다.
+                </div>
+            </div>
+
+            <div class="pagination" th:if="${mypageNewsList != null and not #lists.isEmpty(mypageNewsList)}">
+                <button>&lt;</button>
+                <span>1</span>
+                <button>&gt;</button>
+            </div>
+        </section>
+    </th:block>
+
+    <!-- 회원 탈퇴 -->
+    <div class="account-action">
+        <form th:action="@{/member/withdraw}" method="post">
+            <button type="submit" class="btn-unregister" onclick="return confirm('정말 탈퇴하시겠습니까?');">회원 탈퇴하기</button>
+        </form>
+    </div>
+</main>
+
+<!-- 닉네임 변경 모달 -->
+<div class="modal-overlay" id="nicknameModal" th:classappend="${nicknameError != null} ? 'active' : ''">
+    <div class="modal-content">
+        <h3>닉네임 변경</h3>
+
+        <form th:action="@{/mypage/nickname}" method="post">
+            <div class="modal-body">
+                <input type="text" id="newNickname" name="newNickname"
+                       th:value="${newNickname}"
+                       placeholder="변경할 닉네임 입력" required>
+
+                <div class="error-message" th:if="${nicknameError != null}" th:text="${nicknameError}">
+                    이미 존재하는 닉네임입니다.
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn-cancel" onclick="closeModal()">취소</button>
+                <button type="submit" class="btn-submit">변경</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    const modal = document.getElementById('nicknameModal');
+
+    function openModal() {
+        modal.classList.add('active');
+    }
+
+    function closeModal() {
+        modal.classList.remove('active');
+        const errorMsg = modal.querySelector('.error-message');
+        if (errorMsg) errorMsg.style.display = 'none';
+    }
+</script>
+
+</body>
+</html>

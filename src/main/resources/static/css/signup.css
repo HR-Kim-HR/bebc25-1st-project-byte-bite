@@ -1,0 +1,149 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f8f9fa;
+    padding-bottom: 80px;
+}
+
+.slogan {
+    text-align: center;
+    margin-bottom: 35px;
+    color: #333;
+}
+
+.slogan h1 {
+    font-size: 44px;
+    font-weight: 800;
+    letter-spacing: -2px;
+}
+
+.slogan p {
+    font-size: 19px;
+    margin-top: 8px;
+    color: #666;
+}
+
+.slogan h1 a {
+    color: #ff5252;
+    text-decoration: none;
+}
+
+.slogan h1 a:hover {
+    opacity: 0.85;
+}
+
+.signup-box {
+    width: 420px;
+    padding: 42px;
+    background: white;
+    border-radius: 22px;
+    box-shadow: 0 10px 35px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.signup-box h2 {
+    margin-bottom: 30px;
+    font-size: 24px;
+    color: #333;
+}
+
+.signup-box input {
+    width: 100%;
+    padding: 13px 15px;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background: white;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.2s;
+}
+
+.signup-box input:focus {
+    border-color: #ff5252;
+}
+
+.input-guide {
+    font-size: 12px;
+    color: #666;
+    margin-top: 2px;
+    margin-bottom: 10px;
+    padding-left: 2px;
+    text-align: left;
+}
+
+.field-error {
+    min-height: 18px;
+    color: #e03e3e;
+    font-size: 12px;
+    text-align: left;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    padding-left: 2px;
+}
+
+.member-type {
+    display: flex;
+    justify-content: space-evenly;
+    margin: 15px 0 20px;
+}
+
+.member-type label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.member-type input {
+    margin: 0;
+    accent-color: #ff5252;
+}
+
+.signup-box button {
+    width: 100%;
+    padding: 13px;
+    margin-top: 5px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background-color: #ff5252;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    transition: background-color 0.2s;
+}
+
+.signup-box button:hover {
+    background-color: #e03e3e;
+}
+
+.links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 22px;
+    font-size: 14px;
+    color: #555;
+}
+
+.links a {
+    color: #333;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.links a:hover {
+    color: #ff5252;
+}

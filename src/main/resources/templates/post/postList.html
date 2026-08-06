@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Byte&Bite - 맛집 리뷰</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" th:href="@{/css/postList.css}">
+    <link rel="stylesheet" th:href="@{/css/common.css}">
+</head>
+<body>
+
+<div th:replace="~{layout/common :: nav-header}"></div>
+<main class="wrapper">
+    <div style="display: flex; justify-content: flex-end; margin-bottom: 15px;">
+        <div class="sort-options">
+            <!--     조건별 정렬 버튼 가로 정렬      -->
+            <form action="/posts" method="get" style="display: flex; align-items: center; gap: 18px;">
+                <input type="hidden" name="category" th:value="${category}">
+                <input type="hidden" name="keyword" th:value="${keyword}">
+                <label>
+                    <input type="radio" name="sort" value="latest" th:checked="${sort == 'latest'}"
+                           onchange="this.form.submit()"> 최신순
+                </label>
+                <label>
+                    <input type="radio" name="sort" value="views" th:checked="${sort == 'views'}"
+                           onchange="this.form.submit()"> 조회순
+                </label>
+            </form>
+        </div>
+    </div>
+
+    <!-- 검색바 -->
+    <form class="search-bar" th:action="@{/posts}" method="GET">
+        <input type="hidden" name="sort" th:value="${sort}">
+        <select class="category-select" name="category" onchange="this.form.submit()">
+            <option value="all" th:selected="${category == 'all'}">전체 카테고리</option>
+            <option value="KOR" th:selected="${category == 'KOR'}">한식</option>
+            <option value="WST" th:selected="${category == 'WST'}">양식</option>
+            <option value="CHN" th:selected="${category == 'CHN'}">중식</option>
+            <option value="JPN" th:selected="${category == 'JPN'}">일식</option>
+            <option value="ETC" th:selected="${category == 'ETC'}">기타</option>
+        </select>
+
+        <input type="text" class="search-input" name="keyword" placeholder="식당 이름을 입력해주세요.">
+
+        <button type="submit" class="btn-search">검색</button>
+        <th:block th:if="${session.loginMember == null or session.loginMember.role == 'USER'}">
+            <a th:href="@{/posts/write}" class="btn-write-link">
+                <button type="button" class="btn-write">리뷰작성</button>
+            </a>
+        </th:block>
+    </form>
+
+    <!-- 3x3 카드 그리드 -->
+    <section class="card-grid">
+        <!-- DB에서 가져온 개수만큼 카드가 동적으로 반복 생성됩니다 -->
+        <a th:each="post : ${posts}"
+           th:href="@{/posts/{postId}(postId=${post.id})}"
+           class="card-link">
+            <div class="card">
+                <div class="card-img">
+                    <img th:src="${#strings.arraySplit(post.image, ',')[0]}" alt="대표 이미지">
+                </div>
+                <div class="card-info">
+                    <div class="restaurant-name" th:text="${post.restaurantName}">식당 이름</div>
+                    <div class="row">
+                        <span th:text="${post.categoryName}">카테고리</span>
+                        <span th:text="'조회수 ' + ${post.views}">조회수 0</span>
+                    </div>
+                </div>
+                <div class="card-title" th:text="${post.title}">리뷰 제목</div>
+            </div>
+        </a>
+
+        <!-- 데이터가 아예 없을 때 예외 처리 -->
+        <div th:if="${#lists.isEmpty(posts)}"
+             style="grid-column: 1 / -1; text-align: center; padding: 50px 0; font-size: 18px; font-weight: bold;">
+            등록된 리뷰가 없습니다.
+        </div>
+    </section>
+
+    <div class="pagination">
+        <!-- 이전 -->
+        <a th:if="${page > 1}"
+           th:href="@{/posts(page=${page - 1}, sort=${sort}, category=${category}, keyword=${keyword})}">
+            « 이전
+        </a>
+        <!-- 페이지 번호 -->
+        <th:block th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <a th:if="${i == page}"
+               class="active"
+               th:text="${i}">
+            </a>
+            <a th:if="${i != page}"
+               th:href="@{/posts(page=${i}, sort=${sort}, category=${category}, keyword=${keyword})}"
+               th:text="${i}">
+            </a>
+        </th:block>
+        <!-- 다음 -->
+        <a th:if="${page < totalPage}"
+           th:href="@{/posts(page=${page + 1}, sort=${sort}, category=${category}, keyword=${keyword})}">
+            다음 »
+        </a>
+    </div>
+</main>
+<script>
+    // 뒤로가기 캐시(BFCache) 에서 페이지를 복원했으면 페이지 새로고침
+    window.addEventListener("pageshow", function (event) {
+        if (event.persisted) {
+            location.reload();
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,162 @@
+/* 스크롤바 고정 */
+html {
+    overflow-y: scroll;
+}
+
+/* 전체 초기화 */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background-color: #f8f9fa;
+    color: #222;
+    padding-bottom: 60px;
+}
+
+/* 전체 영역 */
+.wrapper {
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* ==========
+      헤더
+   ==========*/
+header {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    padding: 18px 0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 로고 (화사하고 톡톡 튀는 네온 코랄 주황) */
+.logo {
+    font-size: 28px;
+    font-weight: 800;
+    color: #ff5252;
+    text-decoration: none;
+    letter-spacing: -1px;
+}
+
+.logo:hover {
+    color: #ff5252;
+    text-decoration: none;
+}
+
+/* 로그인 영역 */
+.header-auth {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* 로그인 회원가입 */
+.header-auth a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+
+    background: #fff;
+    color: #333;
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.header-auth a:hover {
+    border-color: #ff5252;
+    color: #ff5252;
+}
+
+/* 로그아웃 버튼 */
+.header-auth button {
+    height: 38px;
+    padding: 0 16px;
+    border: 1px solid #ddd;
+    border-radius: 20px;
+    background: #fff;
+
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.header-auth button:hover {
+    background: #ff5252;
+    color: white;
+    border-color: #ff5252;
+}
+
+/* ==========
+    네비게이션
+   ========== */
+nav {
+    width: 100%;
+    background: #fff;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 25px;
+}
+
+.nav-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* 탭 */
+.tabs {
+    display: flex;
+    gap: 5px;
+}
+
+.tab {
+    font-size: 15px;
+    padding: 14px 18px;
+    cursor: pointer;
+
+    color: #777;
+    background: none;
+    border: none;
+    text-decoration: none;
+    display: inline-block;
+    transition: color 0.2s ease;
+}
+
+.tab:hover {
+    color: #ff5252;
+}
+
+.tab.active {
+    font-weight: bold;
+    color: #ff5252;
+    border-bottom: 3px solid #ff5252;
+}
+
+/* 사용자 환영 문구 */
+.user-welcome {
+    font-size: 14px;
+    color: #555;
+    font-weight: 500;
+    margin-right: 8px;
+}

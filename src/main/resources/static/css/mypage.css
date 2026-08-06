@@ -1,0 +1,451 @@
+/* 내 정보 프로필 카드 */
+.profile-card {
+    background: #fff;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.profile-info {
+    padding-left: 30px;
+}
+.profile-info h2 {
+    font-size: 20px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.profile-info .email {
+    font-size: 14px;
+    color: #666;
+    margin-top: 5px;
+}
+
+/* 식당 정보 카드 전체 */
+.profile-restaurant-card {
+    position: relative; /* 우측 하단 절대 위치 기준점 설정 */
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 40px;
+    display: flex;
+    align-items: center;
+    gap: 40px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+}
+
+/* 식당 이미지 크기감 조절 및 테두리 */
+.profile-restaurant-img {
+    width: 260px;
+    height: 200px;
+    border: 1px solid #edf2f7;
+    border-radius: 12px;
+    overflow: hidden;
+    background-color: #f8f9fa;
+    flex-shrink: 0;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+.profile-restaurant-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+
+    border-radius: 12px;
+}
+
+/* 식당 정보 텍스트 영역 */
+.profile-restaurant-info {
+    border-left: 2px solid #edf2f7;
+    padding-left: 35px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    flex: 1;
+}
+
+.profile-restaurant-info h2 {
+    font-size: 22px;
+    font-weight: 800;
+    color: #1a202c;
+    margin-bottom: 2px;
+}
+
+/* 카테고리 뱃지 스타일 */
+.badge-category {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: bold;
+    background: #fff5f5;
+    color: #ff5252;
+    padding: 3px 10px;
+    border-radius: 6px;
+    margin-bottom: 4px;
+}
+
+/* 주소 및 전화번호 텍스트 */
+.profile-restaurant-info .address,
+.profile-restaurant-info .phone {
+    font-size: 14px;
+    color: #4a5568;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 식당 정보 수정 버튼*/
+.profile-restaurant-action {
+    position: absolute;
+    bottom: 25px;
+    right: 25px;
+}
+
+.btn-restaurant-edit {
+    display: inline-block;
+    border: 1px solid #cbd5e0;
+    background: #fff;
+    color: #4a5568;
+    padding: 7px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.btn-restaurant-edit:hover {
+    background: #ff5252;
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(255, 82, 82, 0.2);
+}
+
+.profile-stats {
+    display: flex;
+    gap: 20px;
+    border-left: 2px solid #ddd;
+    padding-left: 20px;
+    padding-right: 30px;
+}
+
+.stat-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.profile-stats .stat-item + .stat-item {
+    border-left: 2px solid #ddd;
+    padding-left: 50px;
+}
+
+.stat-label {
+    font-size: 12px;
+    color: #666;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.stat-value {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.btn-sm {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    color: #333;
+}
+
+.btn-sm:hover {
+    background: #ff5252;
+    color: #fff;
+    border-color: #ff5252;
+}
+
+/* 4. 작성한 리뷰 섹션 */
+.posts-section {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.section-header {
+    display: flex;
+    align-items: center;
+}
+
+.section-title {
+    font-size: 18px;
+    font-weight: bold;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.count-badge {
+    background: #ff5252;
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+.posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.post-item {
+    background: #fff;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.post-img {
+    width: 80px;
+    height: 80px;
+    border: 2px solid #eee;
+    border-radius: 6px;
+    background-color: #f0f0f0;
+    object-fit: cover;
+    flex-shrink: 0;
+    margin-right: 50px;
+}
+
+.post-main-content {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    flex: 1;
+}
+
+.restaurant-tag {
+    font-size: 12px;
+    font-weight: bold;
+    background: #fff0f0;
+    padding: 3px 8px;
+    border-radius: 4px;
+    width: fit-content;
+    color: #ff5252;
+}
+
+.post-title-link {
+    text-decoration: none;
+    color: inherit;
+    width: fit-content; /* 글자 길이만큼만 클릭 영역 지정 */
+    max-width: 100%;
+
+    cursor: pointer;
+}
+
+.post-title {
+    font-size: 16px;
+    font-weight: bold;
+    color: #111;
+
+    /* 제목이 길면 (...) 처리 */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.post-title-link:hover .post-title{
+    text-decoration: underline;
+    color: #ff5252;
+}
+
+.post-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    margin-left: 15px;
+    border-left: 2px solid #ddd;
+    padding-left: 20px;
+}
+
+.post-date {
+    font-size: 12px;
+    color: #777;
+}
+
+.post-actions {
+    display: flex;
+    gap: 5px;
+}
+
+.btn-action {
+    border: 1px solid #ddd;
+    background: #fff;
+    padding: 4px 8px;
+    font-size: 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+}
+
+.btn-action:hover {
+    background: #ff5252;
+    color: #fff;
+    border-color: #ff5252;
+}
+
+.empty-box {
+    background: #fff;
+    border: 2px dashed #ccc;
+    border-radius: 8px;
+    padding: 30px 0;
+    text-align: center;
+    color: #888;
+}
+
+/* 페이지네이션 */
+.pagination {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+.pagination button {
+    border: 2px solid #ddd;
+    background: #fff;
+    padding: 5px 12px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.pagination button:hover {
+    background: #ff5252;
+    color: #fff;
+    border-color: #ff5252;
+}
+
+/* 회원 탈퇴 */
+.account-action {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 30px;
+    border-top: 1px solid #ccc;
+    padding-top: 15px;
+}
+
+.btn-unregister {
+    border: none;
+    background: none;
+    color: #888;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.btn-unregister:hover {
+    color: #ff5252;
+}
+
+/* 모달 */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    display: none;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal-content {
+    background-color: #fff;
+    border: 2px solid #eee;
+    border-radius: 8px;
+    width: 320px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.modal-body {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.modal-body input {
+    width: 100%;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    font-size: 14px;
+    outline: none;
+}
+
+.modal-body input:focus {
+    border-color: #ff5252;
+}
+
+.error-message {
+    color: #ff5252;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 6px;
+}
+
+.btn-cancel {
+    border: 2px solid #ccc;
+    background: #fff;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-cancel:hover {
+    background: #f5f5f5;
+}
+
+.btn-submit {
+    border: 2px solid #ff5252;
+    background: #ff5252;
+    color: #fff;
+    padding: 6px 12px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.btn-submit:hover {
+    background: #e03e3e;
+    border-color: #e03e3e;
+}

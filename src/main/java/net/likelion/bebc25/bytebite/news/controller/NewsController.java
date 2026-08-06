@@ -1,0 +1,177 @@
+package net.likelion.bebc25.bytebite.news.controller;
+
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
+import net.likelion.bebc25.bytebite.member.dto.SessionMemberDto;
+import net.likelion.bebc25.bytebite.post.dto.NewPageDto;
+import net.likelion.bebc25.bytebite.post.dto.PostDto;
+import net.likelion.bebc25.bytebite.news.service.NewsService;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.HashSet;
+import java.util.Set;
+
+// 맛집 소식 (GET /news)
+// 맛집 소식 상세 조회 (GET /news/{newsId})
+// 맛집 소식 작성 (GET /news/write)
+// 맛집 소식 수정 (GET /news/edit)
+
+@Controller // @Component의 구체화 어노테이션, html 페이지 user에게 return
+@Slf4j
+@RequestMapping("/news") // class level annotation, url prefix
+public class NewsController {
+
+    private final NewsService newsService;
+
+    public NewsController(NewsService newsService){
+        this.newsService = newsService;
+    }
+
+    // 소식 목록 조회하는 컨트롤러
+    @GetMapping // /news/list prefix
+    public String getNewsBoardList(@RequestParam(value = "page", defaultValue = "1") int page,
+                                   @RequestParam(value = "size", defaultValue = "9") int size,
+                                   @RequestParam(value = "sort", defaultValue = "latest") String sort, // 정렬기준
+                                   @RequestParam(value = "category", defaultValue = "all") String category, // category
+                                   String keyword, Model model){
+        // 게시글 목록 조회(데이터)
+        //NewPageDto<PostDto> news = newsService.getNewsList(page, size, sort, category);
+        NewPageDto<PostDto> news;
+        if (keyword != null && !keyword.isEmpty()) {
+            news = newsService.searchNewsByKeyword(keyword, page, size);
+        } else {
+            news = newsService.getNewsList(page, size, sort, category);
+        }
+
+        model.addAttribute("news", news.getContent());
+        model.addAttribute("pageResponse", news);
+        model.addAttribute("sort", sort);
+        model.addAttribute("category", category);
+        model.addAttribute("menu", "news");
+        return "news/newsList"; // template/news/list(.html)
+    }
+
+    // 게시글 수정 화면을 요청하는 컨트롤러
+    @GetMapping("/write")
+    public String getWriteNewsForm(@ModelAttribute("newsForm") PostDto post, Model model){
+        model.addAttribute("menu", "news");
+        return "news/write"; // 템플릿 파일 경로
+    }
+
+    // 게시글 등록 요청을 처리하는 컨트롤러
+    @PostMapping("/write")
+    public String writeNews(@Valid @ModelAttribute("newsForm") PostDto post, // Validation 검증 대상 객체
+                            BindingResult bindingResult, HttpSession session){ // Validation 검증 결과 저장 객체(대상 객체 뒤에 기술해야 함)
+
+        //MemberDto loginMember = (MemberDto) session.getAttribute("loginMember");
+        SessionMemberDto loginMember = (SessionMemberDto) session.getAttribute("loginMember");
+
+        if (loginMember == null) {
+            return "redirect:/login";
+        }
+        log.info(post.toString());
+
+        if (!"MANAGER".equals(loginMember.getRole())) {
+            return "redirect:/news";
+        }
+
+        post.setMemberId(loginMember.getMemberId());
+        post.setType("NEWS");
+
+        // 파일 첨부 객체 생성
+        MultipartFile[] images = post.getImages();
+
+        // 소식에서는 사진 한장만 첨부
+        if (images == null || images.length != 1 || images[0].isEmpty()) {
+            bindingResult.rejectValue("images", "required", "대표 이미지를 한 장 첨부해주세요.");
+        }
+
+        if(bindingResult.hasErrors()){ // 검증에 실패했을 경우
+            return "news/write"; // 작성중이던 페이지로 다시 보낸다.
+        }
+        newsService.writeNews(post, loginMember);
+        return "redirect:/news"; // 브라우저에 /news로 재요청하라고 응답
+    }
+
+    // 수정할 게시물 newsForm 호출
+    @GetMapping("/{id}/edit")
+    public String getEditNewsForm(@PathVariable int id, HttpSession session, Model model){
+        SessionMemberDto loginMember = (SessionMemberDto) session.getAttribute("loginMember");
+        if (loginMember == null) {
+            return "redirect:/login";
+        }
+
+        PostDto news = newsService.getNews(id);
+
+        if (!"MANAGER".equals(loginMember.getRole()) || loginMember.getMemberId() != news.getMemberId()) {
+            return "redirect:/news/" + id;
+        }
+
+        model.addAttribute("newsForm", news);
+        model.addAttribute("menu", "news");
+        return "news/write";
+    }
+
+    // post edit
+    @PostMapping("/{id}/edit")
+    public String editNews(@PathVariable int id,
+                           @Valid @ModelAttribute("newsForm") PostDto post,
+                           BindingResult bindingResult,
+                           HttpSession session){
+        SessionMemberDto loginMember = (SessionMemberDto) session.getAttribute("loginMember");
+        if (loginMember == null) {
+            return "redirect:/login";
+        }
+
+        post.setId(id);
+
+        bindingResult.getFieldErrors("images").forEach(e -> {});
+        if (bindingResult.hasErrors()
+                && bindingResult.getFieldErrorCount() > (bindingResult.getFieldErrorCount("images"))) {
+            return "news/write";
+        }
+
+        newsService.editNews(post, loginMember);
+        return "redirect:/news/" + id;
+    }
+
+    @PostMapping("/{id}/delete")
+    public String deleteNews(@PathVariable int id, HttpSession session){
+        SessionMemberDto loginMember = (SessionMemberDto) session.getAttribute("loginMember");
+        if (loginMember == null) {
+            return "redirect:/login";
+        }
+
+        newsService.removeNews(id, loginMember);
+        return "redirect:/news";
+    }
+
+    // 소식 상세 조회하는 컨트롤러
+    @GetMapping("/{id}")
+    public String getNewsDetail(@PathVariable int id, HttpSession session, Model model){
+
+        // 조회수 처리 - 중복되면 안돼서 HashSet
+        Set<Integer> viewNewsIds = (Set<Integer>) session.getAttribute("viewNewsIds");
+
+        if (viewNewsIds == null) {
+            viewNewsIds = new HashSet<>();
+            session.setAttribute("viewNewsIds", viewNewsIds);
+        }
+
+        // 처음 조회 시에만 조회수 1 증가
+        if (!viewNewsIds.contains(id)) {
+            newsService.increaseView(id);
+            viewNewsIds.add(id);
+        }
+
+        PostDto news = newsService.getNews(id);
+        model.addAttribute("news", news);
+        model.addAttribute("menu", "news");
+        return "news/detail";
+    }
+}

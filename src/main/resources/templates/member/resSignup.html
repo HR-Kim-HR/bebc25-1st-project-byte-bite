@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>식당 등록</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="stylesheet" th:href="@{/css/resSignup.css}">
+</head>
+<body>
+<div class="wrapper">
+    <!-- 슬로건 -->
+    <div class="slogan">
+        <p>맛있는 한입을 <br>함께 나누다.</p>
+        <h1>
+            <a th:href="@{/}">Byte &amp; Bite</a>
+        </h1>
+    </div>
+    <!-- 회원가입 박스 -->
+    <div class="signup-box">
+        <h2>내 식당 등록</h2>
+
+        <form action="/member/signup/restaurant" method="post" enctype="multipart/form-data" th:object="${restaurantForm}">
+            <input type="text" th:field="*{rname}" placeholder="식당명" required>
+            <input type="text" th:field="*{address}" placeholder="식당 주소" required>
+            <select th:field="*{category}">
+                <!-- value : 선택 시 서버로 전송되는 값 -->
+                <option value="">식당 카테고리</option>
+                <option value="KOR">한식</option>
+                <option value="WST">양식</option>
+                <option value="CHN">중식</option>
+                <option value="JPN">일식</option>
+                <option value="ETC">기타</option>
+            </select>
+            <input type="text" th:field="*{phone}" placeholder="전화번호 입력 (' - ' 포함)" required>
+
+            <!-- 식당 대표 이미지 -->
+            <div class="image-upload">
+                <label for="image">식당 대표 이미지</label>
+                <input type="file" id="image" name="image" accept="image/*">
+            </div>
+            <button type="submit">등록하기</button>
+        </form>
+
+        <div class="links">
+            <span>이미 계정이 있으신가요?</span>
+            <a href="/member/login">로그인</a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
